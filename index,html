@@ -1,0 +1,630 @@
+<style>
+
+ .page-container {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+    }
+
+
+.content-wrapper.internal {
+    padding-top: 20px;
+    padding-bottom: 64px;
+}
+
+
+    .box-wrap {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: "Museo Sans Cyrl 300", sans-serif;
+    font-size: 16px;
+    color: #263238;
+}
+
+ .box {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Adding shadow */
+        justify-content: center;
+        font-family: "Museo Sans Cyrl 300", sans-serif;
+        font-size: 16px;
+        
+    }
+    
+    input[type="radio"] {
+        /* Скрыть стандартную радио-кнопку */
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        outline: none;
+        border: 1px solid #23ccc3; /* Цвет обводки кружочка */
+        border-radius: 50%; /* Сделать его круглым */
+        width: 12px;
+        height: 12px;
+        margin: 0;
+        padding: 1.4px;
+        background-clip: content-box;
+    }
+        input[type="radio"]:checked {
+        background-color: #23ccc3; /* Изменить цвет внутреннего кружочка при выборе */
+outline: 0px auto -webkit-focus-ring-color;
+    }
+
+    #know3[disabled] + label {
+        color: #999999;
+    }
+    
+    .box label {
+        font-weight: normal;
+    }
+    
+    .box {
+        background-color: #fffff;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    
+    .box h1 {
+        font-size: 24px;
+        margin-top: 0;
+        padding: 0;
+    }
+    
+  
+    
+    .box input[type="text"],
+    .box select,
+    .box input[type="number"] {
+        width: 100%;
+        padding: 5px;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    
+    .box .calculate-button {
+        background-color: #23ccc3;
+        color: #ffffff;
+        font-size: 17px;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    
+    .box #result {
+        margin-top: 20px;
+        font-size: 16px;
+    }
+    
+    .box table {
+       
+      width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        border: 1px solid #dddddd;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Adding shadow */
+    }
+    
+    .box th,
+    .box td {
+        padding: 8px;
+        border-bottom: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+        text-align: left;
+    }
+    
+    .box th:first-child,
+    .box td:first-child {
+        border-left: 1px solid #dddddd;
+    }
+    
+    .box th:last-child,
+    .box td:last-child {
+        border-right: 1px solid #dddddd;
+    }
+    
+    .box th {
+        background-color: #f5f5f5;
+    }
+    
+    .box #resultTable2 th,
+    .box #resultTable3 th {
+        background-color: #f5f5f5;
+    }
+    
+    .box #resultTable2 td,
+    .box #resultTable3 td {
+        background-color: #ffffff;
+    }
+    
+    .box #resultTable2 td:first-child,
+    .box #resultTable3 td:first-child {
+        font-weight: normal;
+    }
+    
+    .box #resultTable2 td:nth-child(2),
+    .box #resultTable3 td:nth-child(2) {
+        text-align: right;
+    }
+    
+   @media screen and (min-width: 900px)
+   
+   
+   {
+  .stitchSizeContainer {
+    display: inline;
+  }
+  .box  {
+            width: 915px; /* Set the table width to 900px for screens with width >= 900px */
+        }
+ 
+}
+
+@media screen and (max-width: 900px) {
+  .box {
+    padding: 15px;
+  }
+  .stitchSizeContainer {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    display: block;
+  }
+
+        .box .calculate-button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+        .box table {
+            font-size: 15px;
+        }
+        .box th,
+        .box td {
+            padding: 2px;
+        }
+    
+}
+
+</style> <script>
+    function enableCrossStitchFields() {
+        document.getElementById('rfrom').disabled = false;
+        document.getElementById('rto').disabled = false;
+        document.getElementById('kanva3').disabled = true;
+        document.getElementById('rfrom2').disabled = true;
+        document.getElementById('rto2').disabled = true;
+        document.getElementById('know3').disabled = true;
+        document.getElementById('know3').style.color = 'gray';
+        document.getElementById('know2').checked = true;
+    }
+
+    function disableCrossStitchFields() {
+        document.getElementById('rfrom').disabled = true;
+        document.getElementById('rto').disabled = true;
+        document.getElementById('kanva3').disabled = false;
+        document.getElementById('rfrom2').disabled = false;
+        document.getElementById('rto2').disabled = false;
+        document.getElementById('know3').disabled = false;
+        document.getElementById('know3').style.color = ''; // Восстанавливаем цвет по умолчанию
+    }
+
+    function calculateEmbroiderySize() {
+        var widthInCm = parseInt(document.getElementById('rfrom2').value);
+        var heightInCm = parseInt(document.getElementById('rto2').value);
+        var fabricCount = parseInt(document.getElementById('kanva3').value);
+        var threadOption = document.getElementById('kanva3').options[document.getElementById('kanva3').selectedIndex].text;
+        var fabricMargin = parseFloat(document.getElementById('margin').value);
+
+        if (isNaN(widthInCm) || isNaN(heightInCm) || isNaN(fabricCount)) {
+            document.getElementById('result').innerHTML = "<strong>*Введены не полные данные размера вышивки в см</strong>";
+            document.getElementById('resultTable2').style.display = "none";
+            return;
+        }
+
+        var stitchWidth = Math.round(((widthInCm + fabricMargin) * fabricCount) / 2.54);
+        var stitchHeight = Math.round(((heightInCm + fabricMargin) * fabricCount) / 2.54);
+
+        if (threadOption.includes("через 2 нити")) {
+            stitchWidth /= 2;
+            stitchHeight /= 2;
+        }
+
+        var resultText = "<strong>Результат:</strong> вышивка размером <strong>" + widthInCm + " x " + heightInCm + " см</strong>";
+
+        if (fabricMargin > 0) {
+            resultText += "<strong> с припуском " + fabricMargin + " см </strong>";
+        } else {
+            resultText += " без припусков";
+        }
+
+        resultText += " на ткани " + threadOption + " состоит приблизительно из <strong>" + stitchWidth + " x " + stitchHeight + " крестиков</strong>.";
+
+        var resultTable2 = document.getElementById('resultTable2');
+        var newRow2 = resultTable2.insertRow();
+        var sizeCell2 = newRow2.insertCell();
+        sizeCell2.innerHTML = widthInCm + " x " + heightInCm;
+
+        var marginCell2 = newRow2.insertCell();
+        marginCell2.innerHTML = fabricMargin + " см";
+
+        var countCell2 = newRow2.insertCell();
+        countCell2.innerHTML = threadOption;
+
+        var stitchCell2 = newRow2.insertCell();
+        stitchCell2.innerHTML = stitchWidth + " x " + stitchHeight;
+
+        document.getElementById('result').innerHTML = resultText;
+        document.getElementById('resultTable2').style.display = "table";
+
+    }
+
+    function calculateConversion() {
+        var widthInCm = parseFloat(document.getElementById('rfrom2').value);
+        var heightInCm = parseFloat(document.getElementById('rto2').value);
+        var fabricCountOption = parseFloat(document.getElementById('kanva3').value);
+        var fabricCount = parseFloat(document.getElementById('kanva2').value);
+        var fabricMargin = parseFloat(document.getElementById('margin').value);
+
+        if (isNaN(widthInCm) || isNaN(heightInCm) || isNaN(fabricCountOption) || isNaN(fabricCount) || isNaN(fabricMargin)) {
+            document.getElementById('result').innerHTML = "<strong>**Введены не полные данные размера вышивки в см</strong>";
+            return;
+        }
+
+        var stitchWidth = widthInCm * fabricCountOption / fabricCount;
+        var stitchHeight = heightInCm * fabricCountOption / fabricCount;
+
+        var fabricWidth = stitchWidth;
+        var fabricHeight = stitchHeight;
+
+        var selectedOption2 = document.getElementById('kanva2');
+        var selectedOptionText2 = selectedOption2.options[selectedOption2.selectedIndex].text;
+        var threadSpecification2 = "";
+        if (selectedOptionText2.includes("через 2 нити")) {
+            fabricWidth *= 2;
+            fabricHeight *= 2;
+            threadSpecification2 = " (при вышивании через 2 нити)";
+        } else if (selectedOptionText2.includes("через 1 нить")) {
+            fabricWidth *= 1;
+            fabricHeight *= 1;
+            threadSpecification2 = " (при вышивании через 1 нить)";
+        }
+
+        var selectedOption3 = document.getElementById('kanva3');
+        var selectedOptionText3 = selectedOption3.options[selectedOption3.selectedIndex].text;
+        var threadSpecification3 = "";
+        if (selectedOptionText3.includes("через 2 нити")) {
+            fabricWidth *= 0.5;
+            fabricHeight *= 0.5;
+            threadSpecification3 = " (при вышивании через 2 нити)";
+        } else if (selectedOptionText3.includes("через 1 нить")) {
+            fabricWidth *= 1;
+            fabricHeight *= 1;
+            threadSpecification3 = " (при вышивании через 1 нить)";
+        }
+
+        var resultText = "<strong>Результат:</strong> вышивка размером <strong>" + widthInCm + " x " + heightInCm + " см</strong> на ткани " + fabricCountOption + " каунт" + threadSpecification3 + " занимает на ткани " + fabricCount + " каунт" + threadSpecification2 + " <strong>" + (fabricWidth + fabricMargin).toFixed(1) + " x " + (fabricHeight + fabricMargin).toFixed(1) + " см</strong>";
+
+        if (fabricMargin > 0) {
+            resultText += "<strong> с припуском " + fabricMargin + " см.</strong>";
+        } else {
+            resultText += " без припусков.";
+        }
+
+        var table3 = document.getElementById('resultTable3');
+        var newRow3 = table3.insertRow();
+
+        var sizeCell3 = newRow3.insertCell();
+        sizeCell3.innerHTML = widthInCm + " x " + heightInCm;
+
+        var countCell3 = newRow3.insertCell();
+        countCell3.innerHTML = selectedOptionText3;
+
+        var stitchSizeCell3 = newRow3.insertCell();
+        stitchSizeCell3.innerHTML = (fabricWidth + fabricMargin).toFixed(1) + " x " + (fabricHeight + fabricMargin).toFixed(1);
+
+        var fabricCountCell3 = newRow3.insertCell();
+        fabricCountCell3.innerHTML = selectedOptionText2;
+
+        var marginCell3 = newRow3.insertCell();
+        marginCell3.innerHTML = fabricMargin;
+
+        var tableText = table3.innerHTML;
+
+        document.getElementById('result').innerHTML = resultText;
+        document.getElementById('resultTable3').style.display = "table";
+        document.getElementById('resultTable3').innerHTML = tableText;
+    }
+
+    function calculateFabricSize() {
+        var crossStitchWidth;
+        var crossStitchHeight;
+        var fabricCount = parseFloat(document.getElementById('kanva2').value);
+        var fabricMargin = parseFloat(document.getElementById('margin').value);
+
+        if (document.getElementById('what1').checked) {
+            crossStitchWidth = parseInt(document.getElementById('rfrom').value);
+            crossStitchHeight = parseInt(document.getElementById('rto').value);
+
+            if (isNaN(crossStitchWidth) || isNaN(crossStitchHeight)) {
+                document.getElementById('result').innerHTML = "<strong>**Введены не полные данные размера вышивки в крестиках</strong>";
+                document.getElementById('resultTable').style.display = "none";
+                return;
+            }
+        } else {
+            var widthInCm = parseInt(document.getElementById('rfrom2').value);
+            var heightInCm = parseInt(document.getElementById('rto2').value);
+
+            crossStitchWidth = Math.round((widthInCm * fabricCount) / 2.54);
+            crossStitchHeight = Math.round((heightInCm * fabricCount) / 2.54);
+        }
+
+        var fabricWidth = crossStitchWidth / fabricCount * 2.54 + fabricMargin;
+        var fabricHeight = crossStitchHeight / fabricCount * 2.54 + fabricMargin;
+
+        if (fabricCount === 25 || fabricCount === 27 || fabricCount === 28 || fabricCount === 32 || fabricCount === 36 || fabricCount === 40 || fabricCount === 46 || fabricCount === 56) {
+            var selectedOption = document.getElementById('kanva2');
+            var selectedOptionText = selectedOption.options[selectedOption.selectedIndex].text;
+            if (selectedOptionText.includes("через 2 нити")) {
+                fabricWidth *= 2;
+                fabricHeight *= 2;
+            } else if (selectedOptionText.includes("через 1 нить")) {
+                fabricWidth *= 1;
+                fabricHeight *= 1;
+            }
+        }
+
+        var fabricCountOption = document.getElementById('kanva2').options[document.getElementById('kanva2').selectedIndex].text;
+        var fabricCountText = "";
+
+        if (fabricCountOption.includes("через 2 нити")) {
+            fabricCountText = " через 2 нити";
+        } else if (fabricCountOption.includes("через 1 нить")) {
+            fabricCountText = " через 1 нить";
+        }
+
+        var resultText = "<strong>Результат:</strong> вышивка размером <strong>" + crossStitchWidth + " x " + crossStitchHeight + "</strong> крестиков занимает на ткани " + fabricCount + " каунт" + fabricCountText + " <strong>" + fabricWidth.toFixed(1) + " x " + fabricHeight.toFixed(1) + " см</strong>";
+
+        if (fabricMargin > 0) {
+            resultText +=  "<strong> с припуском " + fabricMargin + " см.</strong>";
+        } else {
+            resultText += " без припусков.";
+        }
+
+        var table = document.getElementById('resultTable');
+        var newRow = table.insertRow();
+        var crossStitchCell = newRow.insertCell();
+        var fabricSizeCell = newRow.insertCell();
+        var fabricCountCell = newRow.insertCell();
+        var fabricMarginCell = newRow.insertCell();
+
+        crossStitchCell.innerHTML = crossStitchWidth + " x " + crossStitchHeight;
+        fabricSizeCell.innerHTML = fabricWidth.toFixed(1) + " x " + fabricHeight.toFixed(1);
+        fabricCountCell.innerHTML = document.getElementById('kanva2').options[document.getElementById('kanva2').selectedIndex].text;
+        fabricMarginCell.innerHTML = fabricMargin + " см";
+
+        document.getElementById('result').innerHTML = resultText;
+        document.getElementById('resultTable').style.display = "table";
+    }
+
+    function resetResults() {
+        document.getElementById('result').innerHTML = "";
+        document.getElementById('resultTable').innerHTML = "<tr><th>Размер вышивки (крестиков)</th><th>Размер ткани (см)</th><th>Каунт</th><th>Припуск</th></tr>";
+        document.getElementById('resultTable').style.display = "none";
+        document.getElementById('resultTable2').innerHTML = "<tr><th>Размер вышивки (см)</th><th>Припуск</th><th>Каунт</th><th>Количество крестиков</th></tr>";
+        document.getElementById('resultTable2').style.display = "none";
+        document.getElementById('resultTable3').innerHTML = "<tr><th>Размер вышивки (см)</th><th>Каунт</th><th>Размер вышивки (см)</th><th>Каунт</th><th>Припуск</th></tr>";
+        document.getElementById('resultTable3').style.display = "none";
+
+        document.getElementById('rfrom').value = "";
+        document.getElementById('rto').value = "";
+        document.getElementById('rfrom2').value = "";
+        document.getElementById('rto2').value = "";
+        document.getElementById('kanva3').selectedIndex = 0;
+        document.getElementById('kanva2').selectedIndex = 0;
+        document.getElementById('margin').value = "0";
+
+        document.getElementById('what1').checked = true;
+        document.getElementById('know2').checked = true;
+         document.getElementById('know3').disabled = true;
+        document.getElementById('rfrom').disabled = false;
+        document.getElementById('rto').disabled = false;
+        document.getElementById('kanva3').disabled = true;
+        document.getElementById('rfrom2').disabled = true;
+        document.getElementById('rto2').disabled = true;
+        document.getElementById('kanva2').disabled = false;
+
+        var resetButton = document.getElementById('resetButton');
+        resetButton.disabled = false;
+    }
+
+    function calculateAll() {
+        var isCrossStitchSelected = document.getElementById('what1').checked;
+        var isWidthInCmSelected = document.getElementById('what2').checked;
+        var isEmbroiderySizeSelected = document.getElementById('know3').checked;
+        var isCrossStitchSizeSelected = document.getElementById('know2').checked;
+
+        // Скрываем все таблицы
+        document.getElementById('resultTable').style.display = "none";
+        document.getElementById('resultTable2').style.display = "none";
+        document.getElementById('resultTable3').style.display = "none";
+
+        if (isCrossStitchSelected && isCrossStitchSizeSelected) {
+            calculateFabricSize();
+            document.getElementById('resultTable').style.display = "table";
+        } else if (isWidthInCmSelected && isCrossStitchSizeSelected) {
+            calculateConversion();
+            document.getElementById('resultTable3').style.display = "table";
+        } else if (isWidthInCmSelected && isEmbroiderySizeSelected) {
+            calculateEmbroiderySize();
+            document.getElementById('resultTable2').style.display = "table";
+        }
+    }
+
+</script>
+<div class="box-wrap">
+	<div class="page-container">
+		<div class="box pad calc">
+			<h1 style="text-align: center; ">Калькулятор канвы</h1>
+ <br>
+			<p style="margin-bottom: 5px; padding: 0px;">
+ <strong>Вы знаете:</strong>
+			</p>
+ <input type="radio" onclick="enableCrossStitchFields();" name="what[]" id="what1" value="1" checked=""> <label for="what1">Размер вышивки в крестиках:</label>
+			<div class="stitchSizeContainer">
+ <input type="text" maxlength="5" name="rfrom" id="rfrom" value="" style="width: 50px;"> x <input type="text" maxlength="5" name="rto" id="rto" value="" style="width: 50px;">
+			</div>
+			<p>
+			</p>
+ <input type="radio" onclick="disableCrossStitchFields();" name="what[]" id="what2" value="2"> <label for="what2">Размер вышивки в см:</label>
+			<div class="stitchSizeContainer">
+ <input type="text" maxlength="5" name="rfrom2" id="rfrom2" value="" style="width: 50px;" disabled=""> x <input type="text" maxlength="5" name="rto2" id="rto2" value="" style="width: 50px;" disabled="">
+			</div>
+			 на канве
+			<select id="kanva3" name="kanva3" style="width: 200px;" disabled="">
+				<option value="6">6 каунт</option>
+				<option value="8">8 каунт</option>
+				<option value="10">10 каунт</option>
+				 HTML-комментарий
+				<option value="11">11 каунт</option>
+				<option value="14">14 каунт</option>
+				<option value="16">16 каунт</option>
+				<option value="18">18 каунт</option>
+				<option value="20">20 каунт</option>
+				<option value="22">22 каунт</option>
+				<option value="24">24 каунт</option>
+				<option value="25">25 каунт через 1 нить</option>
+				<option value="25">25 каунт через 2 нити</option>
+				<option value="27">27 каунт через 1 нить</option>
+				<option value="27">27 каунт через 2 нити</option>
+				<option value="28">28 каунт через 1 нить</option>
+				<option value="28">28 каунт через 2 нити</option>
+				<option value="32">32 каунт через 1 нить</option>
+				<option value="32">32 каунт через 2 нити</option>
+				<option value="36">36 каунт через 1 нить</option>
+				<option value="36">36 каунт через 2 нити</option>
+				<option value="40">40 каунт через 1 нить</option>
+				<option value="40">40 каунт через 2 нити</option>
+				<option value="46">46 каунт через 1 нить</option>
+				<option value="46">46 каунт через 2 нити</option>
+				<option value="56">56 каунт через 1 нить</option>
+				<option value="56">56 каунт через 2 нити</option>
+				 HTML-комментарий
+			</select>
+			<p>
+			</p>
+			<p style="margin-bottom: 30px; padding: 0px;">
+ <label for="margin">Припуск ткани (в см):</label> <input type="number" step="1" min="0" name="margin" id="margin" value="0" style="width: 50px;">
+			</p>
+			<p style="line-height: 26px;">
+ <strong>Вы хотите узнать:</strong> <br>
+ <input type="radio" name="know[]" id="know3" value="3" disabled=""> <label for="know3">Размер вышивки в крестиках:</label>
+			</p>
+			<p style="margin-bottom: 0px; padding: 0px;">
+			</p>
+ <input type="radio" name="know[]" id="know2" value="2" checked=""> <label for="know2">Размер вышивки в см на канве</label>
+			<select id="kanva2" name="kanva2" style="width: 200px;">
+				<option value="6">6 каунт</option>
+				<option value="8">8 каунт</option>
+				<option value="10">10 каунт</option>
+				 HTML-комментарий
+				<option value="11">11 каунт</option>
+				<option value="14">14 каунт</option>
+				<option value="16">16 каунт</option>
+				<option value="18">18 каунт</option>
+				<option value="20">20 каунт</option>
+				<option value="22">22 каунт</option>
+				<option value="24">24 каунт</option>
+				<option value="25">25 каунт через 1 нить</option>
+				<option value="25">25 каунт через 2 нити</option>
+				<option value="27">27 каунт через 1 нить</option>
+				<option value="27">27 каунт через 2 нити</option>
+				<option value="28">28 каунт через 1 нить</option>
+				<option value="28">28 каунт через 2 нити</option>
+				<option value="32">32 каунт через 1 нить</option>
+				<option value="32">32 каунт через 2 нити</option>
+				<option value="36">36 каунт через 1 нить</option>
+				<option value="36">36 каунт через 2 нити</option>
+				<option value="40">40 каунт через 1 нить</option>
+				<option value="40">40 каунт через 2 нити</option>
+				<option value="46">46 каунт через 1 нить</option>
+				<option value="46">46 каунт через 2 нити</option>
+				<option value="56">56 каунт через 1 нить</option>
+				<option value="56">56 каунт через 2 нити</option>
+				 HTML-комментарий
+			</select>
+			<p>
+			</p>
+ <input type="button" value="Посчитать" onclick="calculateAll()" class="calculate-button">
+			<div id="result">
+			</div>
+ <br>
+			<table id="resultTable" style="display: none;">
+			<tbody>
+			<tr>
+				<th>
+					 Размер вышивки (крестиков)
+				</th>
+				<th>
+					 Размер ткани (см)
+				</th>
+				<th>
+					 Каунт
+				</th>
+				<th>
+					 Припуск
+				</th>
+			</tr>
+			</tbody>
+			</table>
+			<table id="resultTable2" style="display: none;">
+			<tbody>
+			<tr>
+				<th>
+					 Размер вышивки (см)
+				</th>
+				<th>
+					 Припуск
+				</th>
+				<th>
+					 Каунт
+				</th>
+				<th>
+					 Количество крестиков
+				</th>
+			</tr>
+			</tbody>
+			</table>
+			<table id="resultTable3" style="display: none;">
+			<tbody>
+			<tr>
+				<th>
+					 Размер вышивки (см)
+				</th>
+				<th>
+					 Каунт
+				</th>
+				<th>
+					 Размер вышивки (см)
+				</th>
+				<th>
+					 Каунт
+				</th>
+				<th>
+					 Припуск
+				</th>
+			</tr>
+			</tbody>
+			</table>
+ <br>
+			<p>
+ <input type="button" value="Сбросить" onclick="resetResults()" id="resetButton">
+			</p>
+			<div id="fabricPreview" class="fabric-preview">
+			</div>
+		</div>
+	</div>
+ <br>
+</div>
+ <br>
