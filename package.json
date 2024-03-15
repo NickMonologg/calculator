@@ -10,5 +10,5 @@
   "license": "ISC"
 }
 "publishConfig": {
-  "@nickmonologg:registry": "https://npm.pkg.github.com"
+  "@NickMonologg:registry": "https://npm.pkg.github.com"
 }
