@@ -9,3 +9,6 @@
   "author": "",
   "license": "ISC"
 }
+"publishConfig": {
+  "@nickmonologg:registry": "https://npm.pkg.github.com"
+}
